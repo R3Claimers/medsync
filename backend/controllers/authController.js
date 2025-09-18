@@ -130,51 +130,8 @@ exports.createDoctorWithEmail = async (req, res) => {
       try {
         const transporter = createTransporter();
 
-        const emailHtml = `
-          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px;">
-            <div style="text-align: center; margin-bottom: 30px;">
-              <h2 style="color: #2563eb; margin: 0;">Welcome to MedSync!</h2>
-              <p style="color: #666; margin-top: 5px;">Your Doctor Account</p>
-            </div>
-            
-            <div style="background-color: #f8fafc; padding: 20px; border-radius: 8px; margin-bottom: 25px;">
-              <h3 style="color: #1e40af; margin-top: 0;">Hello Dr. ${name},</h3>
-              <p style="color: #374151; line-height: 1.6;">
-                Your doctor account has been created for <strong>${hospital?.name || 'the hospital'}</strong>. 
-                You can now access the MedSync system using the credentials below.
-              </p>
-            </div>
-
-            <div style="background-color: #fef3c7; border-left: 4px solid #f59e0b; padding: 15px; margin-bottom: 25px;">
-              <h4 style="color: #92400e; margin-top: 0;">⚠️ Important Security Notice</h4>
-              <p style="color: #78350f; margin-bottom: 0;">
-                You must change your password on first login for security purposes.
-              </p>
-            </div>
-
-            <div style="background-color: #ffffff; border: 2px solid #e5e7eb; border-radius: 8px; padding: 20px; margin-bottom: 25px;">
-              <h4 style="color: #374151; margin-top: 0;">Your Login Credentials:</h4>
-              <p style="margin: 10px 0;"><strong>Email:</strong> <code style="background-color: #f3f4f6; padding: 2px 6px; border-radius: 4px;">${email}</code></p>
-              <p style="margin: 10px 0;"><strong>Temporary Password:</strong> <code style="background-color: #f3f4f6; padding: 2px 6px; border-radius: 4px;">${generatedPassword}</code></p>
-              <p style="margin: 10px 0;"><strong>Role:</strong> Doctor</p>
-              ${specialty ? `<p style="margin: 10px 0;"><strong>Specialty:</strong> ${specialty}</p>` : ''}
-            </div>
-
-            <div style="text-align: center; margin-bottom: 25px;">
-              <a href="${process.env.FRONTEND_URL || 'http://localhost:5173'}/login" 
-                 style="display: inline-block; background-color: #2563eb; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold;">
-                Login to MedSync
-              </a>
-            </div>
-
-            <div style="border-top: 1px solid #e5e7eb; padding-top: 20px; text-align: center;">
-              <p style="color: #6b7280; font-size: 14px; margin: 0;">
-                This is an automated message from MedSync Hospital Management System.<br>
-                Please do not reply to this email.
-              </p>
-            </div>
-          </div>
-        `;
+        const { doctorWelcomeEmail } = require('../utils/emailTemplates');
+        const emailHtml = doctorWelcomeEmail({ name, email, password: generatedPassword, specialty });
 
         await transporter.sendMail({
           from: process.env.SMTP_USER,
