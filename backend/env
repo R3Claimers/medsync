@@ -1,6 +1,0 @@
-SMTP_HOST=smtp.gmail.com
-SMTP_PORT=587
-SMTP_USER=202412083@dau.ac.in
-SMTP_PASS=ipwxyfispoevxemr
-FRONTEND_URL=http://localhost:5173
-GEMINI_API_KEY=AIzaSyA3UfQydJfcPApRnjwuNQoL5kd82AZmFQo
