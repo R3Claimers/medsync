@@ -86,10 +86,7 @@ console.log('🚀 Starting MedSync Backend Server...');
 console.log(`📡 Server will run on port ${PORT}`);
 console.log(`📊 MongoDB URI: ${MONGO_URI}`);
 
-mongoose.connect(MONGO_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
+mongoose.connect(MONGO_URI, {})
   .then(() => {
     console.log('✅ MongoDB connected successfully');
     app.listen(PORT, () => {

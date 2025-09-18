@@ -58,31 +58,13 @@ exports.createHospitalAndAdmin = async (req, res) => {
       try {
         const transporter = createTransporter();
         
-        await transporter.sendMail({
-          from: process.env.SMTP_USER,
-          to: adminEmail,
-          subject: 'Your MedSync Admin Account - Password Change Required',
-          html: `
-            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-              <h2 style="color: #2563eb;">Welcome to MedSync!</h2>
-              <p>Hello <strong>${adminName}</strong>,</p>
-              <p>Your admin account has been created for <strong>${hospitalName}</strong>.</p>
-              
-              <div style="background-color: #f3f4f6; padding: 20px; border-radius: 8px; margin: 20px 0;">
-                <h3 style="margin-top: 0; color: #374151;">Login Credentials:</h3>
-                <p><strong>Email:</strong> ${adminEmail}</p>
-                <p><strong>Temporary Password:</strong> <code style="background-color: #e5e7eb; padding: 2px 4px; border-radius: 4px;">${adminPassword}</code></p>
-              </div>
-              
-              <div style="background-color: #fef3c7; padding: 15px; border-radius: 8px; border-left: 4px solid #f59e0b;">
-                <p style="margin: 0;"><strong>⚠️ Important:</strong> You must change your password on first login for security purposes.</p>
-              </div>
-              
-              <p>Please log in at: <a href="${process.env.FRONTEND_URL || 'http://localhost:5173'}/login" style="color: #2563eb;">MedSync Login</a></p>
-              
-              <p>Best regards,<br>The MedSync Team</p>
-            </div>
-          `
+          const { adminWelcomeEmail } = require('../utils/emailTemplates');
+        
+          await transporter.sendMail({
+            from: process.env.SMTP_USER,
+            to: adminEmail,
+            subject: 'Your MedSync Admin Account - Password Change Required',
+            html: adminWelcomeEmail({ name: adminName, email: adminEmail, password: adminPassword, hospital: hospitalName }),
         });
         console.log(`✅ Admin credentials sent to ${adminEmail}`);
       } catch (emailError) {
